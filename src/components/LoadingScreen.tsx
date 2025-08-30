@@ -26,18 +26,28 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
   useEffect(() => {
     if (!isLoading) return;
 
+    // Even slower message rotation (every 7-8 seconds)
     const messageInterval = setInterval(() => {
-      const randomMessage = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
-      setCurrentMessage(randomMessage);
-    }, 2000);
+      setCurrentMessage(prev => {
+        const otherMessages = loadingMessages.filter(m => m !== prev);
+        return otherMessages[Math.floor(Math.random() * otherMessages.length)] || prev;
+      });
+    }, 7500);
 
+    // Slower dots animation (every 1000ms)
     const dotsInterval = setInterval(() => {
       setDots(prev => prev.length >= 3 ? '' : prev + '.');
-    }, 500);
+    }, 1000);
+
+    // Initial delay before showing first message change
+    const initialDelay = setTimeout(() => {
+      setCurrentMessage(loadingMessages[1]);
+    }, 2000);
 
     return () => {
       clearInterval(messageInterval);
       clearInterval(dotsInterval);
+      clearTimeout(initialDelay);
     };
   }, [isLoading]);
 
@@ -68,9 +78,11 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
                 opacity: [0, 1, 0]
               }}
               transition={{
-                duration: 3 + Math.random() * 2,
+                duration: 8 + Math.random() * 4,
                 repeat: Infinity,
-                delay: Math.random() * 2
+                repeatType: 'reverse',
+                delay: Math.random() * 3,
+                ease: 'easeInOut'
               }}
             />
           ))}
@@ -80,22 +92,33 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
         <div className="relative z-10 text-center">
           {/* CareerPanda Logo Animation */}
           <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
+            initial={{ scale: 0, rotate: -180, opacity: 0 }}
+            animate={{ scale: 1, rotate: 0, opacity: 1 }}
+            transition={{ 
+              duration: 2.5, 
+              ease: [0.16, 1, 0.3, 1],
+              rotate: { 
+                type: 'spring',
+                damping: 10,
+                stiffness: 60,
+                mass: 1.5
+              }
+            }}
             className="mb-8"
           >
             <div className="relative">
               {/* Panda Logo */}
               <motion.div
                 animate={{ 
-                  rotate: [0, 5, -5, 0],
-                  scale: [1, 1.05, 1]
+                  rotate: [0, 8, -8, 0],
+                  scale: [1, 1.08, 1],
+                  y: [0, -5, 0]
                 }}
                 transition={{ 
-                  duration: 2,
+                  duration: 3,
                   repeat: Infinity,
-                  ease: "easeInOut"
+                  repeatType: 'reverse',
+                  ease: [0.4, 0, 0.2, 1]
                 }}
                 className="w-32 h-32 mx-auto mb-4 bg-gradient-to-br from-white to-gray-100 rounded-full flex items-center justify-center shadow-2xl"
               >
