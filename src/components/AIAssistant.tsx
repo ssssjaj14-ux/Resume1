@@ -19,11 +19,12 @@ interface AIAssistantProps {
 
 const AIAssistant: React.FC<AIAssistantProps> = ({ resumeData, isLoggedIn }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [conversationHistory, setConversationHistory] = useState<Message[]>([]);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       type: 'assistant',
-      content: "Hi! I'm Panda AI 🐼, your career assistant. I can help you analyze your resume, find jobs, and provide career advice. How can I help you today?",
+      content: "Hello! I'm Panda AI 🐼, your intelligent career companion. I remember our conversations and can help you with resume analysis, job matching, career guidance, and much more. What would you like to explore today?",
       timestamp: new Date()
     }
   ]);
@@ -31,6 +32,38 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ resumeData, isLoggedIn }) => 
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Load conversation history on mount
+  useEffect(() => {
+    const savedHistory = localStorage.getItem('aiChatHistory');
+    if (savedHistory) {
+      try {
+        const history = JSON.parse(savedHistory);
+        setConversationHistory(history);
+        if (history.length > 1) {
+          setMessages([
+            {
+              id: '1',
+              type: 'assistant',
+              content: "Welcome back! I remember our previous conversations. How can I continue helping you with your career today?",
+              timestamp: new Date()
+            }
+          ]);
+        }
+      } catch (error) {
+        console.error('Error loading chat history:', error);
+      }
+    }
+  }, []);
+
+  // Save conversation history
+  useEffect(() => {
+    if (messages.length > 1) {
+      const historyToSave = [...conversationHistory, ...messages.slice(1)];
+      localStorage.setItem('aiChatHistory', JSON.stringify(historyToSave.slice(-50))); // Keep last 50 messages
+      setConversationHistory(historyToSave.slice(-50));
+    }
+  }, [messages]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -94,31 +127,42 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ resumeData, isLoggedIn }) => 
 
     try {
       let response = '';
+      const context = [...conversationHistory, ...messages, userMessage];
 
-      // Handle different types of queries
+      // Handle different types of queries with context awareness
       if (text.toLowerCase().includes('analyze') || text.toLowerCase().includes('resume')) {
         if (resumeData) {
           const analysis = await analyzeResumeWithGemini(resumeData);
-          response = `🎯 **Resume Analysis Complete!**\n\n**ATS Score:** ${analysis.atsScore}/100\n\n**Strengths:**\n${analysis.strengths.map(s => `• ${s}`).join('\n')}\n\n**Areas for Improvement:**\n${analysis.weaknesses.map(w => `• ${w}`).join('\n')}\n\n**Recommendations:**\n${analysis.suggestions.map(s => `• ${s}`).join('\n')}`;
+          response = `🎯 **Resume Analysis Complete!**\n\n**ATS Score:** ${analysis.atsScore}/100\n\n**Key Strengths:**\n${analysis.strengths.map(s => `✅ ${s}`).join('\n')}\n\n**Areas for Improvement:**\n${analysis.weaknesses.map(w => `⚠️ ${w}`).join('\n')}\n\n**Smart Recommendations:**\n${analysis.suggestions.map(s => `💡 ${s}`).join('\n')}\n\nWould you like me to help you implement any of these suggestions?`;
         } else {
-          response = "I'd love to analyze your resume! Please create or upload a resume first using the Resume Builder section.";
+          response = "I'd love to analyze your resume! Please create or upload a resume first using the Resume Builder section. Once you have your resume ready, I can provide detailed ATS scoring and improvement suggestions.";
         }
       } else if (text.toLowerCase().includes('job') || text.toLowerCase().includes('career')) {
         if (isLoggedIn && resumeData?.skills) {
           const jobs = await getJobRecommendationsWithAI(resumeData.skills);
-          response = `💼 **Job Recommendations Based on Your Skills:**\n\n${jobs.slice(0, 5).map((job, i) => `${i + 1}. **${job.title}** at ${job.company}\n   📍 ${job.location} | 💰 ${job.salary}\n   🎯 Match: ${job.matchScore}%\n`).join('\n')}`;
+          response = `💼 **Personalized Job Recommendations:**\n\n${jobs.slice(0, 5).map((job, i) => `${i + 1}. **${job.title}** at ${job.company}\n   📍 ${job.location} | 💰 ${job.salary}\n   🎯 Match: ${job.matchScore}%\n   📋 ${job.description.substring(0, 100)}...\n`).join('\n')}\n\nWould you like me to help you prepare for applications to any of these positions?`;
         } else if (!isLoggedIn) {
-          response = "To get personalized job recommendations, please log in to access the Career Portal!";
+          response = "To get personalized job recommendations, please log in to access the Career Portal! I can provide much better suggestions when I know your background.";
         } else {
-          response = "I need your resume data to provide job recommendations. Please create a resume first!";
+          response = "I need your resume data to provide targeted job recommendations. Please create a resume first, and I'll match you with perfect opportunities!";
+        }
+      } else if (text.toLowerCase().includes('remember') || text.toLowerCase().includes('previous')) {
+        const recentContext = conversationHistory.slice(-10);
+        if (recentContext.length > 0) {
+          response = `🧠 **I remember our conversations!** Here's what we've discussed recently:\n\n${recentContext.slice(-3).map((msg, i) => `${i + 1}. ${msg.type === 'user' ? 'You asked' : 'I helped'}: ${msg.content.substring(0, 80)}...`).join('\n')}\n\nHow can I continue helping you based on our previous discussions?`;
+        } else {
+          response = "This is our first conversation! I'm excited to learn about your career goals and help you succeed. What would you like to work on?";
         }
       } else if (text.toLowerCase().includes('tip') || text.toLowerCase().includes('advice')) {
-        response = `💡 **Career Success Tips:**\n\n• **Optimize your LinkedIn profile** - Use keywords from job descriptions\n• **Build a portfolio** - Showcase your best work and projects\n• **Network actively** - Connect with professionals in your field\n• **Keep learning** - Stay updated with industry trends\n• **Quantify achievements** - Use numbers to show your impact\n• **Practice interviewing** - Prepare for common questions\n• **Follow up** - Send thank-you notes after interviews`;
+        const personalizedTips = getPersonalizedTips(resumeData, context);
+        response = `💡 **Personalized Career Success Tips:**\n\n${personalizedTips.map(tip => `🎯 ${tip}`).join('\n')}\n\nWould you like me to elaborate on any of these strategies?`;
       } else {
-        // General AI response
-        response = await getAIResponse(text);
+        // General AI response with context
+        response = await getAIResponse(text, context);
       }
 
+      // More natural response timing
+      const responseDelay = 800 + Math.random() * 400;
       setTimeout(() => {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
@@ -128,7 +172,7 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ resumeData, isLoggedIn }) => 
         };
         setMessages(prev => [...prev, assistantMessage]);
         setIsTyping(false);
-      }, 1000 + Math.random() * 1000);
+      }, responseDelay);
 
     } catch (error) {
       console.error('AI Assistant error:', error);
@@ -143,23 +187,71 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ resumeData, isLoggedIn }) => 
     }
   };
 
-  const getAIResponse = async (query: string): Promise<string> => {
+  const getPersonalizedTips = (resumeData: any, context: Message[]): string[] => {
+    const tips = [];
+    
+    if (resumeData?.skills?.includes('JavaScript') || resumeData?.skills?.includes('React')) {
+      tips.push('**Build a coding portfolio** - Showcase your React projects on GitHub Pages');
+      tips.push('**Contribute to open source** - Find React/JavaScript projects to contribute to');
+    }
+    
+    if (resumeData?.experience?.length === 0) {
+      tips.push('**Start with internships** - Gain practical experience while building your network');
+      tips.push('**Create personal projects** - Build applications that solve real problems');
+    }
+    
+    if (!resumeData?.personalInfo?.linkedin) {
+      tips.push('**Optimize your LinkedIn** - Complete profile with professional photo and summary');
+    }
+    
+    // Add general tips
+    tips.push('**Network strategically** - Connect with professionals in your target companies');
+    tips.push('**Quantify achievements** - Use numbers to demonstrate your impact');
+    tips.push('**Practice storytelling** - Prepare compelling stories for interviews');
+    tips.push('**Stay updated** - Follow industry trends and emerging technologies');
+    
+    return tips.slice(0, 6);
+  };
+
+  const getAIResponse = async (query: string, context: Message[]): Promise<string> => {
     // Simple rule-based responses for common queries
     const lowerQuery = query.toLowerCase();
     
+    // Check context for better responses
+    const hasDiscussedResume = context.some(msg => 
+      msg.content.toLowerCase().includes('resume') || 
+      msg.content.toLowerCase().includes('analyze')
+    );
+    
+    const hasDiscussedJobs = context.some(msg => 
+      msg.content.toLowerCase().includes('job') || 
+      msg.content.toLowerCase().includes('career')
+    );
+    
     if (lowerQuery.includes('hello') || lowerQuery.includes('hi')) {
-      return "Hello! 👋 I'm Panda AI, your personal career assistant. I'm here to help you with resume analysis, job searching, and career advice. What would you like to work on today?";
+      if (hasDiscussedResume || hasDiscussedJobs) {
+        return "Hello again! 👋 I remember we've been working on your career development. How can I continue helping you today?";
+      }
+      return "Hello! 👋 I'm Panda AI, your intelligent career companion. I can help you with resume analysis, job matching, career strategy, and much more. What's your biggest career goal right now?";
     }
     
     if (lowerQuery.includes('help')) {
-      return "I can help you with:\n\n🔍 **Resume Analysis** - Get ATS scores and improvement suggestions\n💼 **Job Matching** - Find opportunities that match your skills\n📈 **Career Advice** - Tips for professional growth\n📝 **Resume Building** - Guidance on creating effective resumes\n🎯 **Interview Prep** - Common questions and best practices\n\nWhat would you like to explore?";
+      return "I'm here to accelerate your career success! Here's how I can help:\n\n🎯 **Smart Resume Analysis** - ATS scoring with actionable improvements\n💼 **Intelligent Job Matching** - AI-powered opportunities based on your profile\n📈 **Strategic Career Planning** - Personalized roadmaps for growth\n🧠 **Interview Mastery** - Practice sessions and expert tips\n🌟 **Skill Development** - Identify gaps and learning paths\n💰 **Salary Negotiation** - Market insights and strategies\n\nI remember our conversations, so I can provide increasingly personalized advice. What's your priority today?";
     }
     
     if (lowerQuery.includes('salary') || lowerQuery.includes('pay')) {
-      return "💰 **Salary Insights:**\n\nSalary ranges vary by role, experience, and location:\n• **Entry Level (0-2 years):** ₹3-8 LPA\n• **Mid Level (2-5 years):** ₹8-20 LPA\n• **Senior Level (5+ years):** ₹20-50 LPA\n• **Leadership Roles:** ₹50+ LPA\n\nFactors affecting salary:\n• Technical skills and certifications\n• Company size and industry\n• Location (metro vs non-metro)\n• Negotiation skills\n\nWould you like specific salary data for your field?";
+      const personalizedSalary = resumeData?.skills?.includes('JavaScript') ? 
+        "Based on your JavaScript skills, here are realistic ranges:" :
+        "Here are current market salary insights:";
+      
+      return `💰 **${personalizedSalary}**\n\n**India Market (2025):**\n• **Entry Level (0-2 years):** ₹4-10 LPA\n• **Mid Level (2-5 years):** ₹10-25 LPA\n• **Senior Level (5+ years):** ₹25-60 LPA\n• **Leadership Roles:** ₹60+ LPA\n\n**Key Factors:**\n• Technical expertise and certifications\n• Company tier (FAANG vs startup vs service)\n• Location (Bangalore/Mumbai premium)\n• Negotiation and market timing\n\nWant me to analyze your specific earning potential?`;
     }
     
-    return "That's an interesting question! I'm here to help with career-related topics like resume building, job searching, and professional development. Could you tell me more about what specific career help you're looking for?";
+    if (lowerQuery.includes('thank') || lowerQuery.includes('thanks')) {
+      return "You're very welcome! 😊 I'm always here to help you succeed. Remember, career growth is a journey, and I'm excited to be part of yours. Feel free to ask me anything anytime!";
+    }
+    
+    return "That's a great question! I specialize in career acceleration and professional development. Whether it's resume optimization, job strategy, skill development, or interview preparation - I'm here to help you succeed. What specific career challenge can I help you tackle?";
   };
 
   const formatMessage = (content: string) => {
@@ -213,7 +305,7 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ resumeData, isLoggedIn }) => 
       {/* Chat Button */}
       <motion.button
         onClick={toggleChat}
-        className="ai-chat-button fixed bottom-6 right-6 z-50 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-full shadow-2xl flex items-center justify-center text-white transition-all duration-300 group"
+        className="ai-chat-button fixed bottom-6 right-6 z-50 w-16 h-16 sm:w-18 sm:h-18 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-full shadow-2xl flex items-center justify-center text-white transition-all duration-300 group hover:shadow-3xl"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         initial={{ scale: 0 }}
@@ -224,17 +316,17 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ resumeData, isLoggedIn }) => 
       >
         <div className="relative flex flex-col items-center">
           <motion.div 
-            className="text-3xl mb-1"
+            className="text-2xl sm:text-3xl mb-1"
             animate={{ rotate: [0, 10, -10, 0] }}
             transition={{ duration: 3, repeat: Infinity }}
           >
             🐼
           </motion.div>
-          <div className="text-xs font-bold opacity-90 group-hover:opacity-100 transition-opacity">
+          <div className="text-xs font-bold opacity-90 group-hover:opacity-100 transition-opacity hidden sm:block">
             AI
           </div>
           <motion.div
-            className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full border-3 border-white flex items-center justify-center"
+            className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white flex items-center justify-center"
             animate={{ 
               scale: [1, 1.3, 1],
               boxShadow: ["0 0 0 0 rgba(34, 197, 94, 0.7)", "0 0 0 10px rgba(34, 197, 94, 0)", "0 0 0 0 rgba(34, 197, 94, 0)"]
@@ -276,10 +368,19 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ resumeData, isLoggedIn }) => 
               {/* Header */}
               <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
                 <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                    <Bot className="w-5 h-5" />
+                  <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
+                    <motion.span 
+                      className="text-xl"
+                      animate={{ rotate: [0, 10, -10, 0] }}
+                      transition={{ duration: 4, repeat: Infinity }}
+                    >
+                      🐼
+                    </motion.span>
                   </div>
-                  <h3 id="chat-title" className="font-bold">Panda AI Assistant</h3>
+                  <div>
+                    <h3 id="chat-title" className="font-bold text-lg">Panda AI</h3>
+                    <p className="text-xs opacity-90">Your Career Companion</p>
+                  </div>
                 </div>
                 <button 
                   onClick={(e) => {
@@ -294,7 +395,7 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ resumeData, isLoggedIn }) => 
               </div>
 
               {/* Quick Actions */}
-              <div className="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-800 dark:to-blue-900/20 overflow-x-auto">
+              <div className="p-3 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-800 dark:to-blue-900/20">
                 <div className="grid grid-cols-3 gap-2 min-w-max">
                   {quickActions.map((action, index) => (
                     <motion.button
@@ -313,7 +414,7 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ resumeData, isLoggedIn }) => 
               </div>
 
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 bg-gradient-to-b from-gray-50/50 to-white dark:from-gray-800/50 dark:to-gray-900">
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-gray-50/50 to-white dark:from-gray-800/50 dark:to-gray-900">
                 {messages.map((message) => (
                   <motion.div
                     key={message.id}
@@ -322,11 +423,11 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ resumeData, isLoggedIn }) => 
                     className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     <div className={`flex items-start space-x-2 max-w-[80%] ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                      <motion.div 
+                      <motion.div
                         className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg ${
                         message.type === 'user' 
                           ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white' 
-                          : 'bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600 text-white border-2 border-white/20'
+                          : 'bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600 text-white border-2 border-white/30 backdrop-blur-sm'
                       }`}
                         whileHover={{ scale: 1.1 }}
                       >
@@ -335,7 +436,7 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ resumeData, isLoggedIn }) => 
                         ) : (
                           <motion.span 
                             className="text-lg"
-                            animate={{ rotate: [0, 10, -10, 0] }}
+                            animate={{ rotate: [0, 8, -8, 0] }}
                             transition={{ duration: 3, repeat: Infinity }}
                           >
                             🐼
@@ -345,7 +446,7 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ resumeData, isLoggedIn }) => 
                       <motion.div 
                         className={`p-4 rounded-2xl shadow-lg ${
                         message.type === 'user'
-                          ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-br-md border border-blue-400'
+                          ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-br-md'
                           : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-bl-md border border-gray-200 dark:border-gray-700'
                       }`}
                         whileHover={{ scale: 1.02 }}
@@ -353,7 +454,7 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ resumeData, isLoggedIn }) => 
                         <div className="text-sm whitespace-pre-line">
                           {typeof message.content === 'string' ? formatMessage(message.content) : message.content}
                         </div>
-                        <div className="text-xs opacity-70 mt-2 font-medium">
+                        <div className="text-xs opacity-60 mt-2">
                           {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </div>
                       </motion.div>
@@ -368,7 +469,7 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ resumeData, isLoggedIn }) => 
                     className="flex justify-start"
                   >
                     <div className="flex items-start space-x-2">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600 flex items-center justify-center text-white shadow-lg border-2 border-white/20">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600 flex items-center justify-center text-white shadow-lg border-2 border-white/30 backdrop-blur-sm">
                         <motion.span 
                           className="text-lg"
                           animate={{ rotate: [0, 10, -10, 0] }}
@@ -379,7 +480,7 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ resumeData, isLoggedIn }) => 
                       </div>
                       <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl rounded-bl-md shadow-lg border border-gray-200 dark:border-gray-700">
                         <div className="flex items-center space-x-2 mb-2">
-                          <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Panda AI is thinking...</span>
+                          <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Panda AI is crafting a response...</span>
                         </div>
                         <div className="flex space-x-2">
                           {[0, 1, 2].map((i) => (
@@ -388,7 +489,7 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ resumeData, isLoggedIn }) => 
                               className="w-3 h-3 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full"
                               animate={{ 
                                 scale: [1, 1.5, 1],
-                                opacity: [0.5, 1, 0.5]
+                                opacity: [0.4, 1, 0.4]
                               }}
                               transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.3 }}
                             />
@@ -402,14 +503,14 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ resumeData, isLoggedIn }) => 
               </div>
 
               {/* Input Area */}
-              <div className="p-3 sm:p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+              <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
                 <div className="flex items-center space-x-2">
                   <input
                     type="text"
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                    placeholder="Type your message..."
+                    placeholder="Ask me anything about your career..."
                     className="flex-1 px-4 py-2 sm:py-3 text-sm sm:text-base rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     disabled={isTyping}
                     ref={inputRef}
@@ -418,12 +519,19 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ resumeData, isLoggedIn }) => 
                   <button
                     onClick={() => handleSendMessage()}
                     disabled={!inputValue.trim() || isTyping}
-                    className="p-2 sm:p-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="p-2 sm:p-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
                     aria-label="Send message"
                   >
                     <Send className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                 </div>
+                
+                {/* Context indicator */}
+                {conversationHistory.length > 0 && (
+                  <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 text-center">
+                    💭 I remember {conversationHistory.length} previous messages
+                  </div>
+                )}
               </div>
             </motion.div>
           </>

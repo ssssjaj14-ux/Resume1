@@ -13,40 +13,34 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
   message = "Loading CareerPanda..." 
 }) => {
   const [currentMessage, setCurrentMessage] = useState(message);
-  const [dots, setDots] = useState('');
 
   const loadingMessages = [
     "🐼 Initializing CareerPanda...",
-    "🚀 Loading AI-powered features...",
-    "📄 Preparing resume templates...",
-    "💼 Setting up career portal...",
-    "✨ Almost ready to help you succeed!"
+    "🚀 Preparing AI-powered features...",
+    "📄 Loading resume templates...",
+    "💼 Initializing career portal...",
+    "🎨 Setting up portfolio generator...",
+    "✨ Finalizing your experience..."
   ];
 
   useEffect(() => {
     if (!isLoading) return;
 
-    // Even slower message rotation (every 7-8 seconds)
+    // Slower message rotation for smoother experience
     const messageInterval = setInterval(() => {
       setCurrentMessage(prev => {
         const otherMessages = loadingMessages.filter(m => m !== prev);
         return otherMessages[Math.floor(Math.random() * otherMessages.length)] || prev;
       });
-    }, 7500);
+    }, 4000);
 
-    // Slower dots animation (every 1000ms)
-    const dotsInterval = setInterval(() => {
-      setDots(prev => prev.length >= 3 ? '' : prev + '.');
-    }, 1000);
-
-    // Initial delay before showing first message change
+    // Delayed message change for smoother experience
     const initialDelay = setTimeout(() => {
       setCurrentMessage(loadingMessages[1]);
-    }, 2000);
+    }, 3000);
 
     return () => {
       clearInterval(messageInterval);
-      clearInterval(dotsInterval);
       clearTimeout(initialDelay);
     };
   }, [isLoading]);
@@ -158,11 +152,11 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
+            transition={{ delay: 1.5 }}
             className="mb-8"
           >
             <p className="text-lg text-white/90 mb-2">
-              {currentMessage}{dots}
+              {currentMessage}
             </p>
           </motion.div>
 
@@ -170,7 +164,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 1.2 }}
+            transition={{ delay: 2 }}
             className="w-80 max-w-full mx-auto"
           >
             <div className="bg-white/20 rounded-full h-3 overflow-hidden backdrop-blur-sm">
@@ -178,7 +172,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
                 className="h-full bg-gradient-to-r from-blue-400 to-purple-400 rounded-full"
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
+                transition={{ duration: 1.2, ease: "easeOut" }}
               />
             </div>
             <p className="text-white/70 text-sm mt-2">{Math.round(progress)}% Complete</p>
@@ -188,7 +182,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.5 }}
+            transition={{ delay: 2.5 }}
             className="flex justify-center space-x-2 mt-8"
           >
             {[0, 1, 2].map((i) => (
@@ -200,9 +194,9 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
                   opacity: [0.6, 1, 0.6]
                 }}
                 transition={{
-                  duration: 1.5,
+                  duration: 2,
                   repeat: Infinity,
-                  delay: i * 0.2
+                  delay: i * 0.3
                 }}
               />
             ))}
@@ -212,7 +206,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2 }}
+            transition={{ delay: 3 }}
             className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto"
           >
             {[
@@ -224,7 +218,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
                 key={index}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 2.2 + index * 0.1 }}
+                transition={{ delay: 3.2 + index * 0.2 }}
                 className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20"
               >
                 <div className="text-2xl mb-2">{feature.icon}</div>
@@ -249,7 +243,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
                 y: Math.random() * window.innerHeight,
               }}
               transition={{
-                duration: 10 + Math.random() * 10,
+                duration: 15 + Math.random() * 10,
                 repeat: Infinity,
                 repeatType: "reverse"
               }}
@@ -260,6 +254,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
         </div>
       </motion.div>
     </AnimatePresence>
+    </motion.div>
   );
 };
 

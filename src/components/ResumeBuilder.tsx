@@ -507,18 +507,18 @@ const ResumeBuilder: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Sidebar */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-4">
             {/* Quick Actions */}
             <div className="card-base p-6 mb-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 Quick Actions
               </h3>
               
-              <div className="flex flex-col gap-3">
+              <div className="space-y-3">
                 <motion.button
                   type="button"
                   onClick={() => setShowImporter(true)}
-                  className="flex items-center space-x-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg"
+                  className="w-full flex items-center justify-center space-x-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-4 rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl"
                   whileHover={{ scale: 1.02, boxShadow: '0 4px 12px -2px rgba(5, 150, 105, 0.3)' }}
                   whileTap={{ scale: 0.98 }}
                   aria-label="Import resume from file"
@@ -531,16 +531,16 @@ const ResumeBuilder: React.FC = () => {
                   type="button"
                   onClick={handleAIAnalysis}
                   disabled={isAnalyzing}
-                  className="flex items-center space-x-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg disabled:opacity-50"
+                  className="w-full flex items-center justify-center space-x-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-4 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
                   whileHover={{ scale: isAnalyzing ? 1 : 1.02, boxShadow: isAnalyzing ? 'none' : '0 4px 12px -2px rgba(147, 51, 234, 0.3)' }}
                   whileTap={{ scale: isAnalyzing ? 1 : 0.98 }}
                   aria-label="Analyze resume with AI"
                 >
                   {isAnalyzing ? (
-                    <div className="flex items-center space-x-2">
+                    <>
                       <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-                      <span>Analyzing...</span>
-                    </div>
+                      <span className="font-semibold">Analyzing...</span>
+                    </>
                   ) : (
                     <>
                       <Brain className="w-5 h-5" />
@@ -552,7 +552,7 @@ const ResumeBuilder: React.FC = () => {
                 <motion.button
                   type="button"
                   onClick={() => setShowPreview(true)}
-                  className="flex items-center space-x-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg"
+                  className="w-full flex items-center justify-center space-x-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-4 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl"
                   whileHover={{ scale: 1.02, boxShadow: '0 4px 12px -2px rgba(59, 130, 246, 0.3)' }}
                   whileTap={{ scale: 0.98 }}
                   aria-label="Preview resume"
@@ -564,7 +564,7 @@ const ResumeBuilder: React.FC = () => {
                 <motion.button
                   type="button"
                   onClick={handleSave}
-                  className="flex items-center space-x-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white px-6 py-3 rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all shadow-lg"
+                  className="w-full flex items-center justify-center space-x-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white px-6 py-4 rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all shadow-lg hover:shadow-xl"
                   whileHover={{ scale: 1.02, boxShadow: '0 4px 12px -2px rgba(75, 85, 99, 0.3)' }}
                   whileTap={{ scale: 0.98 }}
                   aria-label="Save current progress"
@@ -576,7 +576,7 @@ const ResumeBuilder: React.FC = () => {
                 <motion.button
                   type="submit"
                   onClick={handleSubmit(onSubmit)}
-                  className="flex items-center space-x-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg"
+                  className="w-full flex items-center justify-center space-x-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-4 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl"
                   whileHover={{ scale: 1.02, boxShadow: '0 4px 12px -2px rgba(59, 130, 246, 0.3)' }}
                   whileTap={{ scale: 0.98 }}
                   aria-label="Download resume as PDF"
@@ -597,15 +597,15 @@ const ResumeBuilder: React.FC = () => {
                   <button
                     key={section.id}
                     onClick={() => setActiveSection(section.id)}
-                    className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-all ${
+                    className={`w-full flex items-center space-x-3 p-4 rounded-xl transition-all ${
                       activeSection === section.id
-                        ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                        ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                     }`}
                     aria-label={`Navigate to ${section.label} section`}
                   >
                     <section.icon className="w-5 h-5" />
-                    <span>{section.label}</span>
+                    <span className="font-medium">{section.label}</span>
                   </button>
                 ))}
               </div>
@@ -613,62 +613,8 @@ const ResumeBuilder: React.FC = () => {
           </div>
 
           {/* Main Content */}
-          <div className="lg:col-span-9">
+          <div className="lg:col-span-8">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-              {/* Main Action Buttons - Inside Content Area */}
-              <div className="card-base p-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                  Quick Actions
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <motion.button
-                    type="button"
-                    onClick={() => setShowImporter(true)}
-                    className="flex items-center justify-center space-x-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-3 rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    aria-label="Import resume from file"
-                  >
-                    <Upload className="w-5 h-5" />
-                    <span className="font-semibold">Import Resume</span>
-                  </motion.button>
-
-                  <motion.button
-                    type="button"
-                    onClick={handleAIAnalysis}
-                    disabled={isAnalyzing}
-                    className="flex items-center justify-center space-x-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-3 rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg disabled:opacity-50"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    aria-label="Analyze resume with AI"
-                  >
-                    {isAnalyzing ? (
-                      <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                        <span className="font-semibold">Analyzing...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Brain className="w-5 h-5" />
-                        <span className="font-semibold">AI Analysis</span>
-                      </>
-                    )}
-                  </motion.button>
-
-                  <motion.button
-                    type="button"
-                    onClick={() => setShowPreview(true)}
-                    className="flex items-center justify-center space-x-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-3 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    aria-label="Preview resume"
-                  >
-                    <Eye className="w-5 h-5" />
-                    <span className="font-semibold">Preview Resume</span>
-                  </motion.button>
-                </div>
-              </div>
-
               {/* Template Selector - Full Width */}
               <div className="w-full">
                 <TemplateSelector
@@ -754,7 +700,7 @@ const ResumeBuilder: React.FC = () => {
                     const gradientClass = getSectionIconClass(activeSectionData.color);
                     
                     return (
-                      <div className={`w-8 h-8 bg-gradient-to-r ${gradientClass} rounded-lg flex items-center justify-center`}>
+                      <div className={`w-10 h-10 bg-gradient-to-r ${gradientClass} rounded-xl flex items-center justify-center shadow-lg`}>
                         {React.createElement(activeSectionData.icon, { className: "w-5 h-5 text-white" })}
                       </div>
                     );

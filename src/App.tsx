@@ -23,18 +23,19 @@ function App() {
   useEffect(() => {
     // Simulate loading process
     const loadingSteps = [
-      { progress: 20, delay: 500 },
-      { progress: 40, delay: 800 },
-      { progress: 60, delay: 1200 },
-      { progress: 80, delay: 1500 },
-      { progress: 100, delay: 2000 }
+      { progress: 15, delay: 800 },
+      { progress: 35, delay: 1600 },
+      { progress: 55, delay: 2400 },
+      { progress: 75, delay: 3200 },
+      { progress: 90, delay: 4000 },
+      { progress: 100, delay: 4800 }
     ];
 
     loadingSteps.forEach(({ progress, delay }) => {
       setTimeout(() => {
         setLoadingProgress(progress);
         if (progress === 100) {
-          setTimeout(() => setIsLoading(false), 500);
+          setTimeout(() => setIsLoading(false), 800);
         }
       }, delay);
     });
@@ -77,18 +78,18 @@ function App() {
       <LoadingScreen 
         isLoading={isLoading} 
         progress={loadingProgress}
-        message="Preparing your career success platform..."
+        message="Initializing your career success platform..."
       />
       
       <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
         <Toaster 
           position="top-right"
           toastOptions={{
-            duration: 4000,
+            duration: 3000,
             style: {
               background: '#1F2937',
               color: '#F9FAFB',
-              borderRadius: '12px',
+              borderRadius: '16px',
               border: '1px solid #374151'
             }
           }}
