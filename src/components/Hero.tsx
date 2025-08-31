@@ -98,26 +98,45 @@ const Hero: React.FC = () => {
           >
             <motion.a
               href="#resume"
-              whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(59, 130, 246, 0.3)" }}
-              whileTap={{ scale: 0.95 }}
-              className="group bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center space-x-2"
+              whileHover={{ 
+                scale: 1.05, 
+                boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                y: -2
+              }}
+              whileTap={{ scale: 0.98 }}
+              className="group relative bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center space-x-2 overflow-hidden"
             >
-              <span>Start Building Free</span>
+              <span className="relative z-10">Start Building Free</span>
               <motion.div
+                className="relative z-10"
                 animate={{ x: [0, 5, 0] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
               >
                 <ArrowRight className="w-5 h-5" />
               </motion.div>
+              <motion.div 
+                className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                initial={{ opacity: 0 }}
+              />
             </motion.a>
             
             <motion.a
               href="#templates"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 rounded-xl font-semibold text-lg border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-blue-500 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300"
+              whileHover={{ 
+                scale: 1.05,
+                y: -2,
+                backgroundColor: 'rgba(59, 130, 246, 0.1)'
+              }}
+              whileTap={{ scale: 0.98 }}
+              className="px-8 py-4 rounded-xl font-semibold text-lg border-2 border-blue-500/30 dark:border-blue-400/30 text-blue-600 dark:text-blue-400 hover:border-blue-500/50 dark:hover:border-blue-400/50 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-all duration-300 flex items-center space-x-2"
             >
-              Browse Templates
+              <span>Browse Templates</span>
+              <motion.div
+                animate={{ x: [0, 0, 5, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                <FileText className="w-5 h-5" />
+              </motion.div>
             </motion.a>
           </motion.div>
 

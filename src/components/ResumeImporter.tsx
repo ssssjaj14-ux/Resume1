@@ -42,45 +42,109 @@ const ResumeImporter: React.FC<ResumeImporterProps> = ({ onDataImported, onClose
     }
   };
 
+  const getApiUrl = (path: string) => {
+    // Always use the current origin in production and development
+    // This ensures it works with any port
+    const baseUrl = window.location.origin;
+    console.log('Using base URL:', baseUrl);
+    return `${baseUrl}/api${path}`;
+  };
+
   const handleFile = async (file: File) => {
+    console.log('Handling file:', file.name, 'Type:', file.type, 'Size:', file.size);
+    
     const allowedTypes = [
       'application/pdf',
       'text/plain'
     ];
+    
     const allowedExtensions = ['.pdf', '.txt'];
     const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
+    
+    console.log('File validation - Type:', file.type, 'Extension:', fileExtension);
+    
     if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
-      toast.error('Please upload a PDF or TXT file');
+      const errorMsg = `Invalid file type. Please upload a PDF or TXT file. Got: ${file.type || 'unknown'}`;
+      console.error(errorMsg);
+      toast.error(errorMsg);
       return;
     }
+    
     if (file.size > 10 * 1024 * 1024) {
+      const errorMsg = `File size (${(file.size / (1024 * 1024)).toFixed(2)}MB) exceeds 10MB limit`;
+      console.error(errorMsg);
       toast.error('File size must be less than 10MB');
       return;
     }
+    
     setUploading(true);
     setProcessingStep('Reading file...');
+    
     try {
       let text = '';
-      if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
-        // Send PDF to backend for parsing
+      const isPDF = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+      
+      if (isPDF) {
+        console.log('Processing as PDF file');
         const formData = new FormData();
         formData.append('file', file);
-        const response = await fetch('http://localhost:5001/api/parse-pdf', {
+        
+        const apiUrl = getApiUrl('/parse-pdf');
+        console.log('Sending request to:', apiUrl);
+        
+        // Single response handling with proper error management
+        const response = await fetch(apiUrl, {
           method: 'POST',
-          body: formData
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
         });
-        if (!response.ok) throw new Error('Failed to parse PDF');
-        const data = await response.json();
-        text = data.text;
+        
+        console.log('Response status:', response.status);
+        
+        // Get the response as text first
+        const responseText = await response.text();
+        let data;
+        
+        try {
+          // Try to parse as JSON
+          data = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error('Failed to parse response as JSON:', responseText);
+          throw new Error('Invalid response from server');
+        }
+        
+        if (!response.ok) {
+          console.error('API Error:', data);
+          throw new Error(data.message || `Server error: ${response.status}`);
+        }
+        
+        if (!data.success) {
+          throw new Error(data.message || 'Failed to process PDF');
+        }
+        
+        text = data.text || '';
+        console.log('Extracted text length:', text.length);
+        
       } else if (file.type === 'text/plain' || file.name.toLowerCase().endsWith('.txt')) {
+        console.log('Processing as text file');
         text = await new Promise((resolve, reject) => {
           const reader = new FileReader();
-          reader.onload = (e) => resolve(e.target?.result as string);
-          reader.onerror = () => reject(new Error('Failed to read file'));
+          reader.onload = (e) => {
+            console.log('FileReader loaded successfully');
+            resolve(e.target?.result as string || '');
+          };
+          reader.onerror = (error) => {
+            console.error('FileReader error:', error);
+            reject(new Error('Failed to read file'));
+          };
           reader.readAsText(file);
         });
       } else {
-        throw new Error('Unsupported file type');
+        const errorMsg = `Unsupported file type: ${file.type || 'unknown'}`;
+        console.error(errorMsg);
+        throw new Error(errorMsg);
       }
       setExtractedText(text);
       setProcessingStep('Analyzing content...');
@@ -88,8 +152,17 @@ const ResumeImporter: React.FC<ResumeImporterProps> = ({ onDataImported, onClose
       setExtractedData(parsedData);
       toast.success('Resume data extracted successfully!');
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       console.error('Error processing file:', error);
-      toast.error('Failed to extract data from resume. Please try the "Paste Text" option.');
+      
+      // More specific error messages
+      if (errorMessage.includes('Failed to fetch')) {
+        toast.error('Failed to connect to the server. Please check your connection and try again.');
+      } else if (errorMessage.includes('Failed to parse PDF')) {
+        toast.error('Failed to parse the PDF file. The file might be corrupted or in an unsupported format.');
+      } else {
+        toast.error(`Error: ${errorMessage}`);
+      }
     } finally {
       setUploading(false);
       setProcessingStep('');
@@ -560,13 +633,40 @@ const ResumeImporter: React.FC<ResumeImporterProps> = ({ onDataImported, onClose
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const response = await fetch('/api/import-resume', { method: 'POST', body: formData });
-      if (!response.ok) throw new Error('Import failed');
+      const response = await fetch(getApiUrl('/import-resume'), { 
+        method: 'POST', 
+        body: formData 
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Import failed');
+      }
+      
       const data = await response.json();
       onDataImported(data);
+      toast.success('Resume imported successfully!');
     } catch (e) {
-      toast.error('Import failed. Using default data.');
-      onDataImported({ personalInfo: { name: 'John Doe', email: '', phone: '', location: '', summary: '' }, experience: [], education: [], skills: [], projects: [] });
+      console.error('Import error:', e);
+      toast.error(e instanceof Error ? e.message : 'Import failed. Using default data.');
+      // Only use default data as a last resort
+      if (!extractedData) {
+        onDataImported({ 
+          personalInfo: { 
+            name: '', 
+            email: '', 
+            phone: '', 
+            location: '', 
+            summary: '',
+            linkedin: '',
+            github: ''
+          }, 
+          experience: [], 
+          education: [], 
+          skills: [], 
+          projects: [] 
+        });
+      }
     }
   };
 
