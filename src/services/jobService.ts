@@ -20,86 +20,319 @@ export interface Job {
   featured?: boolean;
   urgent?: boolean;
   verified?: boolean;
+  companyRating?: number;
+  benefits?: string[];
+  teamSize?: string;
+  fundingStage?: string;
 }
 
-// Enhanced job database with real Indian companies and positions
-const generateAdvancedJobs = (): Job[] => {
-  const indianCompanies = [
-    // Tech Giants
-    { name: 'Google India', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'tier1' },
-    { name: 'Microsoft India', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'tier1' },
-    { name: 'Amazon India', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'tier1' },
-    { name: 'Meta India', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'tier1' },
-    { name: 'Apple India', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'tier1' },
+// Enhanced job database with real Indian companies and global opportunities
+const generateWorldClassJobs = (): Job[] => {
+  const companies = [
+    // Global Tech Giants in India
+    { 
+      name: 'Google India', 
+      tier: 'faang', 
+      rating: 4.8,
+      benefits: ['Health Insurance', 'Stock Options', 'Learning Budget', 'Flexible Hours'],
+      teamSize: '10,000+',
+      fundingStage: 'Public'
+    },
+    { 
+      name: 'Microsoft India', 
+      tier: 'faang', 
+      rating: 4.7,
+      benefits: ['Health Insurance', 'Stock Options', 'Remote Work', 'Professional Development'],
+      teamSize: '10,000+',
+      fundingStage: 'Public'
+    },
+    { 
+      name: 'Amazon India', 
+      tier: 'faang', 
+      rating: 4.6,
+      benefits: ['Health Insurance', 'Stock Options', 'Career Growth', 'Global Opportunities'],
+      teamSize: '10,000+',
+      fundingStage: 'Public'
+    },
+    { 
+      name: 'Meta India', 
+      tier: 'faang', 
+      rating: 4.5,
+      benefits: ['Health Insurance', 'Stock Options', 'Innovation Time', 'World-class Facilities'],
+      teamSize: '5,000+',
+      fundingStage: 'Public'
+    },
+    { 
+      name: 'Apple India', 
+      tier: 'faang', 
+      rating: 4.9,
+      benefits: ['Health Insurance', 'Stock Options', 'Product Discounts', 'Premium Benefits'],
+      teamSize: '1,000+',
+      fundingStage: 'Public'
+    },
     
-    // Indian Unicorns
-    { name: 'Flipkart', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'unicorn' },
-    { name: 'Paytm', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'unicorn' },
-    { name: 'Zomato', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'unicorn' },
-    { name: 'Swiggy', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'unicorn' },
-    { name: 'Ola', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'unicorn' },
-    { name: 'PhonePe', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'unicorn' },
-    { name: 'Razorpay', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'unicorn' },
-    { name: 'BYJU\'S', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'unicorn' },
+    // Indian Unicorns & Decacorns
+    { 
+      name: 'Flipkart', 
+      tier: 'unicorn', 
+      rating: 4.4,
+      benefits: ['Health Insurance', 'ESOPs', 'Learning Budget', 'Flexible Work'],
+      teamSize: '50,000+',
+      fundingStage: 'Unicorn'
+    },
+    { 
+      name: 'Paytm', 
+      tier: 'unicorn', 
+      rating: 4.2,
+      benefits: ['Health Insurance', 'ESOPs', 'Meal Allowance', 'Transport'],
+      teamSize: '20,000+',
+      fundingStage: 'Public'
+    },
+    { 
+      name: 'Zomato', 
+      tier: 'unicorn', 
+      rating: 4.3,
+      benefits: ['Health Insurance', 'ESOPs', 'Food Credits', 'Flexible Hours'],
+      teamSize: '5,000+',
+      fundingStage: 'Public'
+    },
+    { 
+      name: 'Swiggy', 
+      tier: 'unicorn', 
+      rating: 4.4,
+      benefits: ['Health Insurance', 'ESOPs', 'Food Allowance', 'Learning Budget'],
+      teamSize: '10,000+',
+      fundingStage: 'Unicorn'
+    },
+    { 
+      name: 'BYJU\'S', 
+      tier: 'unicorn', 
+      rating: 4.1,
+      benefits: ['Health Insurance', 'ESOPs', 'Education Benefits', 'Career Growth'],
+      teamSize: '50,000+',
+      fundingStage: 'Unicorn'
+    },
+    { 
+      name: 'Razorpay', 
+      tier: 'unicorn', 
+      rating: 4.6,
+      benefits: ['Health Insurance', 'ESOPs', 'Learning Budget', 'Remote Work'],
+      teamSize: '3,000+',
+      fundingStage: 'Unicorn'
+    },
+    { 
+      name: 'PhonePe', 
+      tier: 'unicorn', 
+      rating: 4.5,
+      benefits: ['Health Insurance', 'ESOPs', 'Wellness Programs', 'Flexible Work'],
+      teamSize: '5,000+',
+      fundingStage: 'Unicorn'
+    },
     
-    // Service Companies
-    { name: 'Tata Consultancy Services', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'service' },
-    { name: 'Infosys', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'service' },
-    { name: 'Wipro', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'service' },
-    { name: 'HCL Technologies', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'service' },
-    { name: 'Tech Mahindra', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'service' },
+    // High-Growth Startups
+    { 
+      name: 'Freshworks', 
+      tier: 'startup', 
+      rating: 4.5,
+      benefits: ['Health Insurance', 'ESOPs', 'Learning Budget', 'Global Exposure'],
+      teamSize: '5,000+',
+      fundingStage: 'Public'
+    },
+    { 
+      name: 'Zoho', 
+      tier: 'startup', 
+      rating: 4.3,
+      benefits: ['Health Insurance', 'Profit Sharing', 'Learning Budget', 'Work-Life Balance'],
+      teamSize: '12,000+',
+      fundingStage: 'Bootstrapped'
+    },
+    { 
+      name: 'InMobi', 
+      tier: 'startup', 
+      rating: 4.2,
+      benefits: ['Health Insurance', 'ESOPs', 'Innovation Time', 'Global Opportunities'],
+      teamSize: '1,500+',
+      fundingStage: 'Series D'
+    },
+    { 
+      name: 'Unacademy', 
+      tier: 'startup', 
+      rating: 4.1,
+      benefits: ['Health Insurance', 'ESOPs', 'Education Benefits', 'Flexible Hours'],
+      teamSize: '3,000+',
+      fundingStage: 'Unicorn'
+    },
     
-    // Startups
-    { name: 'Freshworks', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'startup' },
-    { name: 'Zoho', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'startup' },
-    { name: 'InMobi', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'startup' },
-    { name: 'Unacademy', logo: 'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=100', tier: 'startup' }
+    // Service Giants
+    { 
+      name: 'Tata Consultancy Services', 
+      tier: 'service', 
+      rating: 4.0,
+      benefits: ['Health Insurance', 'Provident Fund', 'Training Programs', 'Global Projects'],
+      teamSize: '500,000+',
+      fundingStage: 'Public'
+    },
+    { 
+      name: 'Infosys', 
+      tier: 'service', 
+      rating: 4.1,
+      benefits: ['Health Insurance', 'Provident Fund', 'Learning Platform', 'Global Opportunities'],
+      teamSize: '300,000+',
+      fundingStage: 'Public'
+    },
+    { 
+      name: 'Wipro', 
+      tier: 'service', 
+      rating: 3.9,
+      benefits: ['Health Insurance', 'Provident Fund', 'Skill Development', 'Career Growth'],
+      teamSize: '250,000+',
+      fundingStage: 'Public'
+    }
   ];
 
-  const jobTitles = [
+  const jobRoles = [
     // Software Engineering
-    { title: 'Senior Software Engineer', category: 'engineering', experience: '3-5 years', skills: ['JavaScript', 'React', 'Node.js', 'System Design'] },
-    { title: 'Full Stack Developer', category: 'engineering', experience: '2-4 years', skills: ['React', 'Node.js', 'MongoDB', 'Express.js'] },
-    { title: 'Frontend Developer', category: 'engineering', experience: '1-3 years', skills: ['React', 'TypeScript', 'CSS', 'HTML'] },
-    { title: 'Backend Developer', category: 'engineering', experience: '2-5 years', skills: ['Node.js', 'Python', 'PostgreSQL', 'AWS'] },
-    { title: 'DevOps Engineer', category: 'engineering', experience: '2-6 years', skills: ['Docker', 'Kubernetes', 'AWS', 'Jenkins'] },
-    { title: 'Mobile App Developer', category: 'engineering', experience: '2-4 years', skills: ['React Native', 'Flutter', 'iOS', 'Android'] },
+    { 
+      title: 'Senior Software Engineer', 
+      category: 'engineering', 
+      experience: '3-5 years', 
+      skills: ['JavaScript', 'React', 'Node.js', 'System Design', 'AWS'],
+      description: 'Build scalable systems that serve millions of users. Work with cutting-edge technologies and collaborate with world-class engineers to solve complex problems.',
+      requirements: ['5+ years experience', 'Strong system design skills', 'Experience with microservices', 'Cloud platforms knowledge']
+    },
+    { 
+      title: 'Full Stack Developer', 
+      category: 'engineering', 
+      experience: '2-4 years', 
+      skills: ['React', 'Node.js', 'MongoDB', 'Express.js', 'TypeScript'],
+      description: 'Develop end-to-end web applications using modern technologies. Join a fast-paced team building products that impact millions of users.',
+      requirements: ['3+ years full-stack experience', 'React/Node.js expertise', 'Database design skills', 'API development']
+    },
+    { 
+      title: 'Frontend Developer', 
+      category: 'engineering', 
+      experience: '1-3 years', 
+      skills: ['React', 'TypeScript', 'CSS', 'HTML', 'JavaScript'],
+      description: 'Create beautiful, responsive user interfaces that delight users. Work closely with designers and product teams to bring ideas to life.',
+      requirements: ['2+ years React experience', 'Strong CSS skills', 'Responsive design expertise', 'Performance optimization']
+    },
+    { 
+      title: 'Backend Developer', 
+      category: 'engineering', 
+      experience: '2-5 years', 
+      skills: ['Node.js', 'Python', 'PostgreSQL', 'AWS', 'Docker'],
+      description: 'Build robust, scalable backend systems and APIs. Design and implement microservices architecture for high-traffic applications.',
+      requirements: ['3+ years backend experience', 'Database design skills', 'API development', 'Cloud platforms']
+    },
+    { 
+      title: 'DevOps Engineer', 
+      category: 'engineering', 
+      experience: '2-6 years', 
+      skills: ['Docker', 'Kubernetes', 'AWS', 'Jenkins', 'Terraform'],
+      description: 'Automate deployment pipelines and manage cloud infrastructure. Ensure high availability and performance of production systems.',
+      requirements: ['3+ years DevOps experience', 'Container orchestration', 'CI/CD pipelines', 'Infrastructure as Code']
+    },
+    { 
+      title: 'Mobile App Developer', 
+      category: 'engineering', 
+      experience: '2-4 years', 
+      skills: ['React Native', 'Flutter', 'iOS', 'Android', 'JavaScript'],
+      description: 'Build cross-platform mobile applications that provide exceptional user experiences. Work on apps used by millions of users.',
+      requirements: ['2+ years mobile development', 'Cross-platform frameworks', 'App store deployment', 'Performance optimization']
+    },
     
     // Data & AI
-    { title: 'Data Scientist', category: 'data', experience: '1-4 years', skills: ['Python', 'Machine Learning', 'SQL', 'TensorFlow'] },
-    { title: 'Machine Learning Engineer', category: 'data', experience: '2-5 years', skills: ['Python', 'PyTorch', 'MLOps', 'AWS'] },
-    { title: 'Data Analyst', category: 'data', experience: '0-3 years', skills: ['SQL', 'Python', 'Tableau', 'Excel'] },
-    { title: 'AI Research Engineer', category: 'data', experience: '3-7 years', skills: ['Deep Learning', 'Research', 'Python', 'Publications'] },
+    { 
+      title: 'Data Scientist', 
+      category: 'data', 
+      experience: '1-4 years', 
+      skills: ['Python', 'Machine Learning', 'SQL', 'TensorFlow', 'Statistics'],
+      description: 'Extract insights from large datasets to drive business decisions. Build machine learning models that power product features.',
+      requirements: ['2+ years data science experience', 'ML/AI expertise', 'Statistical analysis', 'Python/R proficiency']
+    },
+    { 
+      title: 'Machine Learning Engineer', 
+      category: 'data', 
+      experience: '2-5 years', 
+      skills: ['Python', 'PyTorch', 'MLOps', 'AWS', 'Deep Learning'],
+      description: 'Deploy and scale machine learning models in production. Work on cutting-edge AI projects that shape the future.',
+      requirements: ['3+ years ML experience', 'Production ML systems', 'MLOps practices', 'Deep learning frameworks']
+    },
+    { 
+      title: 'Data Analyst', 
+      category: 'data', 
+      experience: '0-3 years', 
+      skills: ['SQL', 'Python', 'Tableau', 'Excel', 'Statistics'],
+      description: 'Analyze business data to uncover trends and insights. Create dashboards and reports that guide strategic decisions.',
+      requirements: ['1+ years analytics experience', 'SQL proficiency', 'Data visualization', 'Business acumen']
+    },
     
     // Product & Design
-    { title: 'Product Manager', category: 'product', experience: '3-6 years', skills: ['Product Strategy', 'Analytics', 'User Research', 'Agile'] },
-    { title: 'UI/UX Designer', category: 'design', experience: '2-5 years', skills: ['Figma', 'User Research', 'Prototyping', 'Design Systems'] },
-    { title: 'Product Designer', category: 'design', experience: '2-4 years', skills: ['Design Thinking', 'Figma', 'User Testing', 'Prototyping'] },
+    { 
+      title: 'Product Manager', 
+      category: 'product', 
+      experience: '3-6 years', 
+      skills: ['Product Strategy', 'Analytics', 'User Research', 'Agile', 'SQL'],
+      description: 'Drive product strategy and roadmap for features used by millions. Collaborate with engineering, design, and business teams.',
+      requirements: ['3+ years product management', 'Technical background', 'Data-driven approach', 'User-centric mindset']
+    },
+    { 
+      title: 'UI/UX Designer', 
+      category: 'design', 
+      experience: '2-5 years', 
+      skills: ['Figma', 'User Research', 'Prototyping', 'Design Systems', 'Adobe Creative Suite'],
+      description: 'Design intuitive user experiences that solve real problems. Create design systems and conduct user research.',
+      requirements: ['3+ years design experience', 'Portfolio of work', 'User research skills', 'Design system experience']
+    },
+    { 
+      title: 'Product Designer', 
+      category: 'design', 
+      experience: '2-4 years', 
+      skills: ['Design Thinking', 'Figma', 'User Testing', 'Prototyping', 'Research'],
+      description: 'Own the end-to-end design process from research to implementation. Work closely with product and engineering teams.',
+      requirements: ['2+ years product design', 'End-to-end design process', 'User research', 'Prototyping skills']
+    },
     
     // Business & Marketing
-    { title: 'Digital Marketing Manager', category: 'marketing', experience: '2-5 years', skills: ['SEO', 'Google Ads', 'Analytics', 'Content Marketing'] },
-    { title: 'Business Analyst', category: 'business', experience: '1-4 years', skills: ['Analytics', 'SQL', 'Business Intelligence', 'Excel'] },
-    { title: 'Sales Executive', category: 'sales', experience: '0-3 years', skills: ['Sales', 'CRM', 'Communication', 'Negotiation'] },
-    
-    // Operations
-    { title: 'Operations Manager', category: 'operations', experience: '3-6 years', skills: ['Operations', 'Process Improvement', 'Team Management', 'Analytics'] },
-    { title: 'Quality Assurance Engineer', category: 'engineering', experience: '1-4 years', skills: ['Testing', 'Automation', 'Selenium', 'API Testing'] },
-    { title: 'Technical Writer', category: 'content', experience: '1-3 years', skills: ['Technical Writing', 'Documentation', 'API Documentation', 'Content Strategy'] }
+    { 
+      title: 'Digital Marketing Manager', 
+      category: 'marketing', 
+      experience: '2-5 years', 
+      skills: ['SEO', 'Google Ads', 'Analytics', 'Content Marketing', 'Social Media'],
+      description: 'Drive digital marketing strategy across multiple channels. Optimize campaigns for maximum ROI and user acquisition.',
+      requirements: ['3+ years digital marketing', 'Performance marketing', 'Analytics tools', 'Growth mindset']
+    },
+    { 
+      title: 'Business Analyst', 
+      category: 'business', 
+      experience: '1-4 years', 
+      skills: ['Analytics', 'SQL', 'Business Intelligence', 'Excel', 'Tableau'],
+      description: 'Analyze business processes and identify improvement opportunities. Work with stakeholders to drive data-driven decisions.',
+      requirements: ['2+ years business analysis', 'SQL proficiency', 'Process improvement', 'Stakeholder management']
+    },
+    { 
+      title: 'Sales Executive', 
+      category: 'sales', 
+      experience: '0-3 years', 
+      skills: ['Sales', 'CRM', 'Communication', 'Negotiation', 'Lead Generation'],
+      description: 'Drive revenue growth through strategic sales initiatives. Build relationships with enterprise clients and close deals.',
+      requirements: ['1+ years sales experience', 'CRM tools', 'Communication skills', 'Target achievement']
+    }
   ];
 
   const locations = [
-    'Bangalore, Karnataka', 'Mumbai, Maharashtra', 'Delhi, NCR', 'Hyderabad, Telangana',
+    'Bangalore, Karnataka', 'Mumbai, Maharashtra', 'Delhi NCR', 'Hyderabad, Telangana',
     'Chennai, Tamil Nadu', 'Pune, Maharashtra', 'Kolkata, West Bengal', 'Ahmedabad, Gujarat',
     'Noida, Uttar Pradesh', 'Gurgaon, Haryana', 'Kochi, Kerala', 'Indore, Madhya Pradesh',
-    'Jaipur, Rajasthan', 'Coimbatore, Tamil Nadu', 'Thiruvananthapuram, Kerala', 'Bhubaneswar, Odisha'
+    'Remote, India', 'Jaipur, Rajasthan', 'Coimbatore, Tamil Nadu', 'Bhubaneswar, Odisha'
   ];
 
   const getSalaryRange = (tier: string, experience: string, category: string) => {
     const baseRanges = {
-      'tier1': { min: 25, max: 80 },
-      'unicorn': { min: 15, max: 50 },
-      'startup': { min: 8, max: 30 },
-      'service': { min: 4, max: 25 }
+      'faang': { min: 30, max: 100 },
+      'unicorn': { min: 20, max: 60 },
+      'startup': { min: 12, max: 40 },
+      'service': { min: 6, max: 30 }
     };
 
     const experienceMultiplier = {
@@ -108,25 +341,22 @@ const generateAdvancedJobs = (): Job[] => {
       '0-3 years': 0.8,
       '1-3 years': 0.9,
       '1-4 years': 1.0,
-      '2-4 years': 1.1,
-      '2-5 years': 1.3,
-      '2-6 years': 1.4,
-      '3-5 years': 1.5,
-      '3-6 years': 1.6,
-      '3-7 years': 1.8,
-      '5+ years': 2.0
+      '2-4 years': 1.2,
+      '2-5 years': 1.4,
+      '2-6 years': 1.5,
+      '3-5 years': 1.6,
+      '3-6 years': 1.8,
+      '5+ years': 2.2
     };
 
     const categoryMultiplier = {
-      'engineering': 1.2,
-      'data': 1.3,
-      'product': 1.1,
-      'design': 1.0,
-      'marketing': 0.9,
-      'business': 0.8,
-      'sales': 0.7,
-      'operations': 0.8,
-      'content': 0.7
+      'engineering': 1.3,
+      'data': 1.4,
+      'product': 1.2,
+      'design': 1.1,
+      'marketing': 1.0,
+      'business': 0.9,
+      'sales': 0.8
     };
 
     const base = baseRanges[tier as keyof typeof baseRanges] || baseRanges.startup;
@@ -143,48 +373,61 @@ const generateAdvancedJobs = (): Job[] => {
   let jobId = 1;
 
   // Generate comprehensive job listings
-  for (const company of indianCompanies) {
-    for (const jobTitle of jobTitles) {
-      for (let i = 0; i < (company.tier === 'tier1' ? 3 : company.tier === 'unicorn' ? 2 : 1); i++) {
+  for (const company of companies) {
+    for (const role of jobRoles) {
+      // Generate multiple positions per company
+      const positionsCount = company.tier === 'faang' ? 4 : company.tier === 'unicorn' ? 3 : 2;
+      
+      for (let i = 0; i < positionsCount; i++) {
         const location = locations[Math.floor(Math.random() * locations.length)];
-        const isRemote = Math.random() > 0.7;
+        const isRemote = Math.random() > 0.6;
         const isUrgent = Math.random() > 0.85;
-        const isFeatured = Math.random() > 0.9;
-        const isVerified = company.tier === 'tier1' || company.tier === 'unicorn';
+        const isFeatured = Math.random() > 0.8;
+        const isVerified = company.tier === 'faang' || company.tier === 'unicorn';
         
-        const postedDaysAgo = Math.floor(Math.random() * 30) + 1;
+        const postedDaysAgo = Math.floor(Math.random() * 21) + 1;
         const postedDate = new Date(Date.now() - postedDaysAgo * 24 * 60 * 60 * 1000);
 
         jobs.push({
           id: `job-${jobId++}`,
-          title: jobTitle.title,
+          title: role.title,
           company: company.name,
           location: isRemote ? 'Remote, India' : location,
-          type: Math.random() > 0.8 ? 'contract' : 'full-time',
-          experience: jobTitle.experience,
-          salary: getSalaryRange(company.tier, jobTitle.experience, jobTitle.category),
-          description: `Join ${company.name} as a ${jobTitle.title} and work on cutting-edge projects that impact millions of users. We're looking for passionate professionals who want to make a difference in the tech industry. This role offers excellent growth opportunities, competitive compensation, and the chance to work with world-class teams.`,
-          requirements: jobTitle.skills,
+          type: Math.random() > 0.85 ? 'contract' : 'full-time',
+          experience: role.experience,
+          salary: getSalaryRange(company.tier, role.experience, role.category),
+          description: role.description,
+          requirements: role.requirements,
           posted: `${postedDaysAgo} day${postedDaysAgo > 1 ? 's' : ''} ago`,
-          url: `https://careers.${company.name.toLowerCase().replace(/\s+/g, '').replace(/'/g, '')}.com`,
-          logo: company.logo,
+          url: `https://careers.${company.name.toLowerCase().replace(/\s+/g, '').replace(/'/g, '')}.com/jobs/${role.title.toLowerCase().replace(/\s+/g, '-')}`,
+          logo: `https://logo.clearbit.com/${company.name.toLowerCase().replace(/\s+/g, '').replace(/'/g, '')}.com`,
           remote: isRemote,
-          skills: jobTitle.skills,
+          skills: role.skills,
           postedDate: postedDate.toISOString().split('T')[0],
           source: ['linkedin', 'indeed', 'glassdoor', 'naukri', 'angellist'][Math.floor(Math.random() * 5)] as Job['source'],
-          matchScore: 75 + Math.floor(Math.random() * 25),
+          matchScore: 70 + Math.floor(Math.random() * 30),
           featured: isFeatured,
           urgent: isUrgent,
-          verified: isVerified
+          verified: isVerified,
+          companyRating: company.rating,
+          benefits: company.benefits,
+          teamSize: company.teamSize,
+          fundingStage: company.fundingStage
         });
       }
     }
   }
 
-  return jobs.sort((a, b) => new Date(b.postedDate).getTime() - new Date(a.postedDate).getTime());
+  return jobs.sort((a, b) => {
+    // Sort by: featured > urgent > verified > recent
+    if (a.featured !== b.featured) return a.featured ? -1 : 1;
+    if (a.urgent !== b.urgent) return a.urgent ? -1 : 1;
+    if (a.verified !== b.verified) return a.verified ? -1 : 1;
+    return new Date(b.postedDate).getTime() - new Date(a.postedDate).getTime();
+  });
 };
 
-const allJobs = generateAdvancedJobs();
+const allJobs = generateWorldClassJobs();
 
 export const searchJobs = async (query: string, filters: {
   location?: string;
@@ -195,7 +438,7 @@ export const searchJobs = async (query: string, filters: {
   salary?: string;
 }): Promise<Job[]> => {
   // Simulate realistic API delay
-  await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 200));
+  await new Promise(resolve => setTimeout(resolve, 400 + Math.random() * 300));
   
   let filteredJobs = [...allJobs];
   
@@ -223,6 +466,12 @@ export const searchJobs = async (query: string, filters: {
     filteredJobs = filteredJobs.filter(job => job.type === filters.type);
   }
   
+  if (filters.experience) {
+    filteredJobs = filteredJobs.filter(job => 
+      job.experience.toLowerCase().includes(filters.experience!.toLowerCase())
+    );
+  }
+  
   if (filters.remote !== undefined) {
     filteredJobs = filteredJobs.filter(job => job.remote === filters.remote);
   }
@@ -237,15 +486,7 @@ export const searchJobs = async (query: string, filters: {
     );
   }
   
-  // Sort by relevance: featured > urgent > verified > recent
-  filteredJobs.sort((a, b) => {
-    if (a.featured !== b.featured) return a.featured ? -1 : 1;
-    if (a.urgent !== b.urgent) return a.urgent ? -1 : 1;
-    if (a.verified !== b.verified) return a.verified ? -1 : 1;
-    return new Date(b.postedDate).getTime() - new Date(a.postedDate).getTime();
-  });
-  
-  return filteredJobs.slice(0, 50);
+  return filteredJobs.slice(0, 60);
 };
 
 const calculateRelevanceScore = (job: Job, searchTerms: string[]): number => {
@@ -253,23 +494,24 @@ const calculateRelevanceScore = (job: Job, searchTerms: string[]): number => {
   const searchableText = `${job.title} ${job.company} ${job.description} ${job.skills.join(' ')}`.toLowerCase();
   
   searchTerms.forEach(term => {
-    if (job.title.toLowerCase().includes(term)) score += 20;
-    if (job.company.toLowerCase().includes(term)) score += 15;
-    if (job.skills.some(skill => skill.toLowerCase().includes(term))) score += 18;
-    if (job.description.toLowerCase().includes(term)) score += 8;
-    if (job.location.toLowerCase().includes(term)) score += 5;
+    if (job.title.toLowerCase().includes(term)) score += 25;
+    if (job.company.toLowerCase().includes(term)) score += 20;
+    if (job.skills.some(skill => skill.toLowerCase().includes(term))) score += 22;
+    if (job.description.toLowerCase().includes(term)) score += 10;
+    if (job.location.toLowerCase().includes(term)) score += 8;
   });
   
   // Boost score for quality indicators
-  if (job.featured) score += 10;
-  if (job.urgent) score += 8;
-  if (job.verified) score += 5;
+  if (job.featured) score += 15;
+  if (job.urgent) score += 12;
+  if (job.verified) score += 10;
+  if (job.companyRating && job.companyRating > 4.5) score += 8;
   
   return score;
 };
 
 export const getRecommendedJobs = async (userSkills: string[], experience: string): Promise<Job[]> => {
-  await new Promise(resolve => setTimeout(resolve, 400));
+  await new Promise(resolve => setTimeout(resolve, 500));
   
   const recommendedJobs = allJobs
     .filter(job => {
@@ -293,15 +535,62 @@ export const getRecommendedJobs = async (userSkills: string[], experience: strin
         )
       ).length;
       
-      // Prioritize featured and verified jobs
+      // Prioritize quality indicators
       if (a.featured !== b.featured) return a.featured ? -1 : 1;
       if (a.verified !== b.verified) return a.verified ? -1 : 1;
+      if (a.companyRating !== b.companyRating) return (b.companyRating || 0) - (a.companyRating || 0);
       
       return bMatches - aMatches;
     })
-    .slice(0, 20);
+    .slice(0, 25);
   
   return recommendedJobs;
+};
+
+export const getAdvancedJobRecommendations = async (userSkills: string[], experience: string): Promise<Job[]> => {
+  await new Promise(resolve => setTimeout(resolve, 600));
+  
+  // Advanced matching algorithm
+  const scoredJobs = allJobs.map(job => {
+    let score = 0;
+    
+    // Skill matching (40% weight)
+    const skillMatches = job.skills.filter(skill => 
+      userSkills.some(userSkill => 
+        userSkill.toLowerCase().includes(skill.toLowerCase()) ||
+        skill.toLowerCase().includes(userSkill.toLowerCase())
+      )
+    ).length;
+    score += (skillMatches / Math.max(job.skills.length, 1)) * 40;
+    
+    // Experience matching (25% weight)
+    const jobExpYears = parseInt(job.experience.match(/\d+/)?.[0] || '0');
+    const userExpYears = parseInt(experience.match(/\d+/)?.[0] || '0');
+    const expDiff = Math.abs(jobExpYears - userExpYears);
+    score += Math.max(0, 25 - expDiff * 5);
+    
+    // Company quality (20% weight)
+    if (job.verified) score += 10;
+    if (job.featured) score += 8;
+    if (job.companyRating && job.companyRating > 4.5) score += 10;
+    if (job.companyRating && job.companyRating > 4.0) score += 5;
+    
+    // Recency (10% weight)
+    const daysAgo = parseInt(job.posted.match(/\d+/)?.[0] || '30');
+    score += Math.max(0, 10 - daysAgo * 0.5);
+    
+    // Salary attractiveness (5% weight)
+    const salaryNum = parseInt(job.salary?.match(/\d+/)?.[0] || '0');
+    if (salaryNum > 25) score += 5;
+    else if (salaryNum > 15) score += 3;
+    
+    return { ...job, matchScore: Math.round(score) };
+  });
+  
+  return scoredJobs
+    .filter(job => job.matchScore > 30)
+    .sort((a, b) => b.matchScore - a.matchScore)
+    .slice(0, 20);
 };
 
 export const getJobById = async (id: string): Promise<Job | null> => {
@@ -311,19 +600,19 @@ export const getJobById = async (id: string): Promise<Job | null> => {
 
 export const getFeaturedJobs = async (): Promise<Job[]> => {
   await new Promise(resolve => setTimeout(resolve, 200));
-  return allJobs.filter(job => job.featured).slice(0, 10);
+  return allJobs.filter(job => job.featured).slice(0, 15);
 };
 
 export const getUrgentJobs = async (): Promise<Job[]> => {
   await new Promise(resolve => setTimeout(resolve, 200));
-  return allJobs.filter(job => job.urgent).slice(0, 8);
+  return allJobs.filter(job => job.urgent).slice(0, 12);
 };
 
 export const getJobsByCompany = async (companyName: string): Promise<Job[]> => {
-  await new Promise(resolve => setTimeout(resolve, 200));
+  await new Promise(resolve => setTimeout(resolve, 250));
   return allJobs.filter(job => 
     job.company.toLowerCase().includes(companyName.toLowerCase())
-  ).slice(0, 20);
+  ).slice(0, 25);
 };
 
 export const getJobMarketAnalytics = () => {
@@ -331,10 +620,12 @@ export const getJobMarketAnalytics = () => {
   const featuredJobs = allJobs.filter(job => job.featured).length;
   const remoteJobs = allJobs.filter(job => job.remote).length;
   const urgentJobs = allJobs.filter(job => job.urgent).length;
+  const verifiedJobs = allJobs.filter(job => job.verified).length;
   
   const skillCounts = new Map<string, number>();
   const companyCounts = new Map<string, number>();
   const locationCounts = new Map<string, number>();
+  const salaryCounts = new Map<string, number>();
   
   allJobs.forEach(job => {
     job.skills.forEach(skill => {
@@ -342,31 +633,39 @@ export const getJobMarketAnalytics = () => {
     });
     companyCounts.set(job.company, (companyCounts.get(job.company) || 0) + 1);
     locationCounts.set(job.location, (locationCounts.get(job.location) || 0) + 1);
+    
+    if (job.salary) {
+      const salaryRange = job.salary.split('-')[0].replace('₹', '').replace('LPA', '').trim();
+      salaryCounts.set(salaryRange, (salaryCounts.get(salaryRange) || 0) + 1);
+    }
   });
   
   const topSkills = Array.from(skillCounts.entries())
     .sort(([,a], [,b]) => b - a)
-    .slice(0, 10);
+    .slice(0, 15);
     
   const topCompanies = Array.from(companyCounts.entries())
     .sort(([,a], [,b]) => b - a)
-    .slice(0, 10);
+    .slice(0, 15);
     
   const topLocations = Array.from(locationCounts.entries())
     .sort(([,a], [,b]) => b - a)
-    .slice(0, 10);
+    .slice(0, 12);
   
   return {
     totalJobs,
     featuredJobs,
     remoteJobs,
     urgentJobs,
+    verifiedJobs,
     topSkills,
     topCompanies,
     topLocations,
-    averageSalary: '₹15-35 LPA',
-    growthRate: '+23%',
-    newJobsThisWeek: Math.floor(totalJobs * 0.1)
+    averageSalary: '₹18-45L',
+    growthRate: '+28%',
+    newJobsThisWeek: Math.floor(totalJobs * 0.15),
+    faangJobs: allJobs.filter(job => job.company.includes('Google') || job.company.includes('Microsoft') || job.company.includes('Amazon') || job.company.includes('Meta') || job.company.includes('Apple')).length,
+    unicornJobs: allJobs.filter(job => job.fundingStage === 'Unicorn').length
   };
 };
 
@@ -374,7 +673,7 @@ export const getJobMarketAnalytics = () => {
 export const searchJobsAdvanced = async (
   query: string, 
   filters: any,
-  sortBy: 'relevance' | 'date' | 'salary' | 'company' = 'relevance'
+  sortBy: 'relevance' | 'date' | 'salary' | 'company' | 'rating' = 'relevance'
 ): Promise<Job[]> => {
   const results = await searchJobs(query, filters);
   
@@ -389,7 +688,88 @@ export const searchJobsAdvanced = async (
       });
     case 'company':
       return results.sort((a, b) => a.company.localeCompare(b.company));
+    case 'rating':
+      return results.sort((a, b) => (b.companyRating || 0) - (a.companyRating || 0));
     default:
       return results; // Already sorted by relevance
   }
+};
+
+// User interaction tracking
+export const recordUserJobSearch = (query: string, location?: string) => {
+  const searchData = {
+    query,
+    location,
+    timestamp: new Date().toISOString(),
+    userId: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!).id : 'anonymous'
+  };
+  
+  const searches = JSON.parse(localStorage.getItem('jobSearchHistory') || '[]');
+  searches.push(searchData);
+  localStorage.setItem('jobSearchHistory', JSON.stringify(searches.slice(-50))); // Keep last 50 searches
+};
+
+export const getUserSearchHistory = () => {
+  return JSON.parse(localStorage.getItem('jobSearchHistory') || '[]');
+};
+
+// Mock external API functions (for Vercel compatibility)
+export const fetchJobsFromRapidAPI = async (params: any): Promise<{ data: any[] }> => {
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 800));
+  
+  // Return subset of our local jobs formatted as external API response
+  const relevantJobs = allJobs
+    .filter(job => 
+      job.title.toLowerCase().includes(params.jobTitle?.toLowerCase() || '') ||
+      job.location.toLowerCase().includes(params.location?.toLowerCase() || '')
+    )
+    .slice(0, 20);
+  
+  return {
+    data: relevantJobs.map(job => ({
+      job_id: job.id,
+      job_title: job.title,
+      employer_name: job.company,
+      job_city: job.location,
+      job_employment_type: job.type,
+      job_required_experience: job.experience,
+      estimated_salary: job.salary,
+      job_description: job.description,
+      job_required_skills: job.skills,
+      job_posted_at_datetime_utc: job.postedDate,
+      job_apply_link: job.url,
+      employer_logo: job.logo,
+      job_is_remote: job.remote
+    }))
+  };
+};
+
+export const fetchSmartJobsFromInternet = async (): Promise<any[]> => {
+  // Simulate smart job fetching
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // Return enhanced job data
+  return allJobs
+    .filter(job => job.featured || job.verified)
+    .slice(0, 15)
+    .map(job => ({
+      job_id: job.id,
+      job_title: job.title,
+      employer_name: job.company,
+      job_city: job.location,
+      job_employment_type: job.type,
+      job_required_experience: job.experience,
+      estimated_salary: job.salary,
+      job_description: job.description,
+      job_required_skills: job.skills,
+      job_posted_at_datetime_utc: job.postedDate,
+      job_apply_link: job.url,
+      employer_logo: job.logo,
+      job_is_remote: job.remote,
+      company_rating: job.companyRating,
+      benefits: job.benefits,
+      team_size: job.teamSize,
+      funding_stage: job.fundingStage
+    }));
 };
