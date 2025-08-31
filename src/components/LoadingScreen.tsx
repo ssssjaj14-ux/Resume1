@@ -254,7 +254,6 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
         </div>
       </motion.div>
     </AnimatePresence>
-    </motion.div>
   );
 };
 
