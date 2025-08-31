@@ -65,13 +65,6 @@ function App() {
 
   const handleLogin = (userData: any) => {
     setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
-    setShowAuthModal(false);
-  };
-
-  const handleSignup = (userData: any) => {
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
     setShowAuthModal(false);
   };
 
@@ -127,7 +120,6 @@ function App() {
           isOpen={showAuthModal}
           onClose={() => setShowAuthModal(false)}
           onLogin={handleLogin}
-          onSignup={handleSignup}
         />
       </div>
     </ThemeProvider>

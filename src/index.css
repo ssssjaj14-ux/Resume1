@@ -324,15 +324,15 @@
 /* Mobile optimizations */
 @media (max-width: 768px) {
   .mobile-optimized {
-    @apply text-sm leading-relaxed px-4;
+    @apply text-sm leading-relaxed;
   }
   
   .mobile-padding {
-    @apply px-4 py-8;
+    @apply px-4 py-6;
   }
   
   .mobile-spacing {
-    @apply space-y-6;
+    @apply space-y-4;
   }
   
   .mobile-grid {
@@ -340,77 +340,22 @@
   }
   
   .mobile-flex {
-    @apply flex-col space-y-6 space-x-0;
-  }
-  
-  /* Enhanced mobile button styles */
-  .btn-primary, .btn-secondary, .btn-accent {
-    @apply px-6 py-4 text-base min-h-[48px] touch-manipulation;
-  }
-  
-  /* Mobile-specific card styles */
-  .card-base {
-    @apply rounded-2xl mx-2;
-  }
-  
-  /* Mobile input improvements */
-  .input-base {
-    @apply py-4 text-base min-h-[48px];
-  }
-  
-  /* Mobile navigation improvements */
-  .mobile-nav {
-    @apply fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 p-4 z-40;
-  }
-}
-
-/* Extra small devices (phones in portrait) */
-@media (max-width: 480px) {
-  .container {
-    @apply px-3;
-  }
-  
-  .hero h1 {
-    @apply text-3xl;
-  }
-  
-  .section h2 {
-    @apply text-2xl;
-  }
-  
-  .card-base {
-    @apply p-4 rounded-xl;
-  }
-  
-  .btn-primary, .btn-secondary, .btn-accent {
-    @apply px-4 py-3 text-sm;
+    @apply flex-col space-y-4 space-x-0;
   }
 }
 
 /* Touch device optimizations */
 @media (hover: none) and (pointer: coarse) {
   .touch-optimized {
-    @apply min-h-[48px] min-w-[48px];
+    @apply min-h-[44px] min-w-[44px];
   }
   
-  /* Disable hover effects on touch devices */
-  .hover\:scale-105:hover,
-  .hover\:scale-110:hover {
-    transform: scale(1) !important;
+  .hover\:scale-105:hover {
+    transform: none;
   }
   
   .hover\:shadow-xl:hover {
-    box-shadow: inherit !important;
-  }
-  
-  /* Enhanced touch targets */
-  button, a, input, select, textarea {
-    @apply min-h-[48px] touch-manipulation;
-  }
-  
-  /* Touch-friendly spacing */
-  .touch-spacing {
-    @apply space-y-4;
+    box-shadow: none;
   }
 }
 
